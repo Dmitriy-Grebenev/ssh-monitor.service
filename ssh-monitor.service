@@ -1,0 +1,13 @@
+[Unit]
+Description=SSH user monitor service
+# This service will use journalctl to monitor sshd logs, 
+# filter out login events, and append them to a separate log file /var/log/ssh-users.log. 
+# The Restart=always option ensures that the service will be restarted 
+# if it crashes or stops for any reason.
+
+[Service]
+ExecStart=/usr/bin/bash -c 'journalctl -f _SYSTEMD_UNIT=sshd.service | grep "Accepted publickey for" >> /var/log/ssh-users.log'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
